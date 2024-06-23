@@ -13,6 +13,10 @@
         android:theme="@style/Theme.NoteKar"
         tools:targetApi="31">
         <activity
+            android:name=".NoteDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".NoteListActivity"/>
+        <activity
             android:name=".NoteListActivity"
             android:exported="true">
             <intent-filter>
