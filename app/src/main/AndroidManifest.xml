@@ -15,7 +15,7 @@
         <activity
             android:name=".NoteDetailActivity"
             android:exported="false"
-            android:parentActivityName=".NoteListActivity"/>
+            />
         <activity
             android:name=".NoteListActivity"
             android:exported="true">

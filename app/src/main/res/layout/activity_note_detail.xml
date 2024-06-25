@@ -13,7 +13,7 @@
         android:layout_height="wrap_content" />
 
     <include
-        android:id="@+id/editView"
+        android:id="@+id/cl_edit_View"
         layout="@layout/edit_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -21,7 +21,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"/>
     <include
-        android:id="@+id/textView"
+        android:id="@+id/cl_text_View"
         layout="@layout/view_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
