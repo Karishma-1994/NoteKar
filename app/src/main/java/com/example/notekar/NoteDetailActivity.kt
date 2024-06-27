@@ -3,6 +3,7 @@ package com.example.notekar
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.notekar.databinding.ActivityNoteDetailBinding
 
@@ -10,12 +11,15 @@ class NoteDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNoteDetailBinding
     private val viewState = ViewState.CREATE
+    private lateinit var db: DateBaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNoteDetailBinding.inflate(this.layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar.toolbar)
+        db = DateBaseHelper(this)
+
 
         supportActionBar?.title = getString(R.string.create_note)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -27,19 +31,21 @@ class NoteDetailActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        when(this.viewState){
+        when (this.viewState) {
             ViewState.VIEW -> {
                 menu!!.findItem(R.id.menu_save).setVisible(false)
                 menu.findItem(R.id.menu_delete).setVisible(false)
                 menu.findItem(R.id.menu_edit).setVisible(true)
 
             }
-            ViewState.EDIT->{
+
+            ViewState.EDIT -> {
                 menu!!.findItem(R.id.menu_save).setVisible(true)
                 menu.findItem(R.id.menu_delete).setVisible(true)
                 menu.findItem(R.id.menu_edit).setVisible(false)
             }
-            ViewState.CREATE->{
+
+            ViewState.CREATE -> {
                 menu!!.findItem(R.id.menu_save).setVisible(true)
                 menu.findItem(R.id.menu_delete).setVisible(false)
                 menu.findItem(R.id.menu_edit).setVisible(false)
@@ -55,6 +61,8 @@ class NoteDetailActivity : AppCompatActivity() {
             }
 
             R.id.menu_save -> {
+                saveClicked()
+                return true
             }
 
             R.id.menu_edit -> {
@@ -66,11 +74,24 @@ class NoteDetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun saveClicked(){
+        val title: String = binding.clEditView.editTitle.text.toString().trim()
+        val detail: String = binding.clEditView.editContent.text.toString().trim()
+        if (title.isEmpty() && detail.isEmpty()){
+            Toast.makeText(this, "title or detail cannot be empty", Toast.LENGTH_SHORT).show()
+        } else {
+            db.addNote(title, detail)
+            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
+        }
+            finish()
+        }
+    }
+
 
     private enum class ViewState {
         CREATE,
         VIEW,
         EDIT
     }
-}
+
 
