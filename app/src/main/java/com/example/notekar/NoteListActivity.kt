@@ -4,12 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.notekar.databinding.ActivityNoteListBinding
 
 
 class NoteListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNoteListBinding
+    private lateinit var db: DateBaseHelper
+    private lateinit var noteListAdapter: NoteListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +22,14 @@ class NoteListActivity : AppCompatActivity() {
 
         supportActionBar?.title = getString(R.string.app_name)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        db = DateBaseHelper(this)
+
+        noteListAdapter = NoteListAdapter()
+
+        binding.rvNotes.adapter = noteListAdapter
+        binding.rvNotes.layoutManager = LinearLayoutManager(this)
+
+        updateNoteList()
 
         binding.fabAddNotes.setOnClickListener {
             val intent = Intent(
@@ -32,6 +43,11 @@ class NoteListActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
+    }
+
+    private fun updateNoteList() {
+        val noteList = db.getAll()
+        noteListAdapter.setNoteList(noteList)
     }
 }
 

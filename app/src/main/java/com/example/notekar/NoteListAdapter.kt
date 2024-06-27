@@ -7,7 +7,7 @@ import com.example.notekar.databinding.NoteLayoutBinding
 
 class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteListViewHolder>() {
 
-
+    private var noteModelList: List<NoteModel> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteListViewHolder {
         val binding: NoteLayoutBinding =
@@ -16,16 +16,29 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteListViewHolder>
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return noteModelList.size
     }
 
     override fun onBindViewHolder(holder: NoteListViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        holder.bind(noteModelList[position])
+    }
+
+    fun setNoteList(noteList: List<NoteModel>) {
+        noteModelList = noteList
+        notifyDataSetChanged()
     }
 
     class NoteListViewHolder(
-        binding: NoteLayoutBinding
+        private val binding: NoteLayoutBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        init {
+
+        }
+
+        fun bind(noteModel: NoteModel) {
+            binding.tvTitle.text = noteModel.title
+            binding.tvContent.text = noteModel.content
+        }
     }
 }

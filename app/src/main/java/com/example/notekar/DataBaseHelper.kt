@@ -45,6 +45,25 @@ class DateBaseHelper(
         }
         db.close()
     }
+
+    fun getAll(): List<NoteModel> {
+        val returnList: MutableList<NoteModel> = ArrayList()
+        val queryString = "SELECT * FROM $TABLE_NAME"
+        val db = readableDatabase
+        val cursor = db.rawQuery(queryString, null)
+        if (cursor.moveToFirst()) {
+            do {
+                val noteID = cursor.getInt(0)
+                val title = cursor.getString(1)
+                val content = cursor.getString(2)
+                val newNote = NoteModel(noteID, title, content)
+                returnList.add(newNote)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return returnList
+    }
 }
 
 
