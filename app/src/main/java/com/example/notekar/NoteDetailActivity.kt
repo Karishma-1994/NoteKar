@@ -30,7 +30,6 @@ class NoteDetailActivity : AppCompatActivity() {
 
         if (clickedId > 0) {
             noteModel = db.get(clickedId)
-            println("KarishmaDebug detail $noteModel")
             setDataOnViewFromId()
         }
 
@@ -106,12 +105,12 @@ class NoteDetailActivity : AppCompatActivity() {
         val content: String = binding.clEditView.editContent.text.toString().trim()
         if (title.isEmpty() && content.isEmpty()) {
             Toast.makeText(this, "title or detail cannot be empty", Toast.LENGTH_SHORT).show()
-        } else {
 
+            } else {
                 db.addNote(title, content)
                 Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
             }
-            finish()
+            returnSuccessResult()
         }
 
 
@@ -129,7 +128,11 @@ class NoteDetailActivity : AppCompatActivity() {
         invalidateOptionsMenu()
     }
 
-
+    private fun returnSuccessResult() {
+        val returnIntent = Intent()
+        setResult(RESULT_OK, returnIntent)
+        finish()
+    }
 
 }
 

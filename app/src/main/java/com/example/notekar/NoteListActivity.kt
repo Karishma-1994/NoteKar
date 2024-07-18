@@ -17,7 +17,13 @@ class NoteListActivity : AppCompatActivity() {
     private lateinit var noteListAdapter: NoteListAdapter
 
 
-
+    var detailActivityResult = registerForActivityResult<Intent, ActivityResult>(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (RESULT_OK == result.resultCode) {
+            updateNoteList()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,13 +44,12 @@ class NoteListActivity : AppCompatActivity() {
 
         noteListAdapter.setOnClickListener(object : NoteListAdapter.NoteClickListener {
             override fun onClick(noteModel: NoteModel?) {
-                println("KarishmaDebug list $noteModel")
                 val intent = Intent(
                     this@NoteListActivity,
                     NoteDetailActivity::class.java
                 )
                 intent.putExtra(ID_KEY, noteModel?.id)
-               startActivity(intent)
+                detailActivityResult.launch(intent)
             }
         })
 
@@ -54,7 +59,7 @@ class NoteListActivity : AppCompatActivity() {
                 this@NoteListActivity,
                 NoteDetailActivity::class.java
             )
-           startActivity(intent)
+           detailActivityResult.launch(intent)
         }
     }
 
