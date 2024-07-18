@@ -1,17 +1,23 @@
 package com.example.notekar
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.notekar.databinding.ActivityNoteDetailBinding
 
+const val ID_KEY = "id"
+
 class NoteDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNoteDetailBinding
-    private val viewState = ViewState.CREATE
+    private var viewState = ViewState.CREATE
     private lateinit var db: DateBaseHelper
+    private var clickedId = 0
+    private var noteModel: NoteModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +26,13 @@ class NoteDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar.toolbar)
         db = DateBaseHelper(this)
 
+        clickedId = intent.getIntExtra(ID_KEY, 0)
+
+        if (clickedId > 0) {
+            noteModel = db.get(clickedId)
+            println("KarishmaDebug detail $noteModel")
+            setDataOnViewFromId()
+        }
 
         supportActionBar?.title = getString(R.string.create_note)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -66,6 +79,8 @@ class NoteDetailActivity : AppCompatActivity() {
             }
 
             R.id.menu_edit -> {
+                editClicked()
+                return true
             }
 
             R.id.menu_delete -> {
@@ -74,24 +89,54 @@ class NoteDetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun saveClicked(){
+
+    private fun setDataOnViewFromId() {
+        changeViewState(ViewState.VIEW)
+        binding.clTextView.root.visibility = View.VISIBLE
+        binding.clEditView.root.visibility = View.GONE
+        noteModel?.let {
+            binding.clTextView.viewTitle.text = it.title
+            binding.clTextView.viewContent.text = it.content
+        }
+    }
+
+
+    private fun saveClicked() {
         val title: String = binding.clEditView.editTitle.text.toString().trim()
-        val detail: String = binding.clEditView.editContent.text.toString().trim()
-        if (title.isEmpty() && detail.isEmpty()){
+        val content: String = binding.clEditView.editContent.text.toString().trim()
+        if (title.isEmpty() && content.isEmpty()) {
             Toast.makeText(this, "title or detail cannot be empty", Toast.LENGTH_SHORT).show()
         } else {
-            db.addNote(title, detail)
-            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
-        }
+
+                db.addNote(title, content)
+                Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
+            }
             finish()
         }
+
+
+    private fun editClicked() {
+        changeViewState(ViewState.EDIT)
+        binding.clTextView.root.visibility = View.GONE
+        binding.clEditView.root.visibility = View.VISIBLE
+        binding.clEditView.editTitle.setText(noteModel?.title)
+        binding.clEditView.editContent.setText(noteModel?.content)
     }
 
 
-    private enum class ViewState {
-        CREATE,
-        VIEW,
-        EDIT
+    private fun changeViewState(viewState: ViewState) {
+        this.viewState = viewState
+        invalidateOptionsMenu()
     }
+
+
+
+}
+
+private enum class ViewState {
+    CREATE,
+    VIEW,
+    EDIT
+}
 
 

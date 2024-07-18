@@ -46,6 +46,8 @@ class DateBaseHelper(
         db.close()
     }
 
+
+
     fun getAll(): List<NoteModel> {
         val returnList: MutableList<NoteModel> = ArrayList()
         val queryString = "SELECT * FROM $TABLE_NAME"
@@ -64,6 +66,22 @@ class DateBaseHelper(
         db.close()
         return returnList
     }
+
+    fun get(id: Int): NoteModel? {
+        val db = readableDatabase
+        val String = "SELECT * FROM $TABLE_NAME WHERE $ID= $id"
+        val cursor = db.rawQuery(String, null);
+        return if (cursor.moveToFirst()) {
+            val noteID = cursor.getInt(0);
+            val title = cursor.getString(1);
+            val content = cursor.getString(2);
+
+            cursor.close();
+            db.close();
+            NoteModel(noteID, title, content);
+        } else {
+            db.close()
+            null
+        }
+    }
 }
-
-
