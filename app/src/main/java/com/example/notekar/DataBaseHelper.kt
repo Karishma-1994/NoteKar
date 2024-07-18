@@ -46,7 +46,19 @@ class DateBaseHelper(
         db.close()
     }
 
-
+    fun updateNote(title: String, content: String, id: Int){
+        val db = writableDatabase
+        val cv = ContentValues()
+        cv.put(TITLE,title)
+        cv.put(CONTENT,content)
+        val updatedCount = db.update(TABLE_NAME,cv, "$ID= ?", arrayOf(id.toString()))
+        if (updatedCount > 0) {
+            Toast.makeText(context, "Updated Successfully", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Update Failed", Toast.LENGTH_SHORT).show()
+        }
+        db.close()
+    }
 
     fun getAll(): List<NoteModel> {
         val returnList: MutableList<NoteModel> = ArrayList()

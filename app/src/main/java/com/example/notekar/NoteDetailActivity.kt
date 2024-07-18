@@ -114,6 +114,7 @@ class NoteDetailActivity : AppCompatActivity() {
         }
 
 
+
     private fun editClicked() {
         changeViewState(ViewState.EDIT)
         binding.clTextView.root.visibility = View.GONE
