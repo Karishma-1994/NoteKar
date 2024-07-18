@@ -105,14 +105,16 @@ class NoteDetailActivity : AppCompatActivity() {
         val content: String = binding.clEditView.editContent.text.toString().trim()
         if (title.isEmpty() && content.isEmpty()) {
             Toast.makeText(this, "title or detail cannot be empty", Toast.LENGTH_SHORT).show()
-
+        } else {
+            if (viewState == ViewState.EDIT && noteModel != null) {
+                db.updateNote(title, content, (noteModel!!.id))
             } else {
                 db.addNote(title, content)
                 Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
             }
             returnSuccessResult()
         }
-
+    }
 
 
     private fun editClicked() {
