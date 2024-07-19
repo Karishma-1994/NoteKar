@@ -60,6 +60,12 @@ class DateBaseHelper(
         db.close()
     }
 
+    fun deleteNote(id: Int): Int {
+        val db = this.writableDatabase
+        return db.delete(TABLE_NAME, "$ID = ?", arrayOf(id.toString()))
+
+    }
+
     fun getAll(): List<NoteModel> {
         val returnList: MutableList<NoteModel> = ArrayList()
         val queryString = "SELECT * FROM $TABLE_NAME"

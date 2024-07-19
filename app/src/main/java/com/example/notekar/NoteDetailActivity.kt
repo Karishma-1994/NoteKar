@@ -83,6 +83,8 @@ class NoteDetailActivity : AppCompatActivity() {
             }
 
             R.id.menu_delete -> {
+                deleteClicked()
+                return true
             }
         }
         return super.onOptionsItemSelected(item)
@@ -99,6 +101,11 @@ class NoteDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun deleteClicked() {
+        db.deleteNote((noteModel!!.id))
+        Toast.makeText(this, "Deleted Successfully", Toast.LENGTH_SHORT).show()
+        returnSuccessResult()
+    }
 
     private fun saveClicked() {
         val title: String = binding.clEditView.editTitle.text.toString().trim()
@@ -115,7 +122,6 @@ class NoteDetailActivity : AppCompatActivity() {
             returnSuccessResult()
         }
     }
-
 
     private fun editClicked() {
         changeViewState(ViewState.EDIT)
