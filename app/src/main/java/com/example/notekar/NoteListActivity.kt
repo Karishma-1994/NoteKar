@@ -15,6 +15,7 @@ class NoteListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNoteListBinding
     private lateinit var db: DateBaseHelper
     private lateinit var noteListAdapter: NoteListAdapter
+    private var mode = Mode.VIEW
 
 
     var detailActivityResult = registerForActivityResult<Intent, ActivityResult>(
@@ -72,5 +73,12 @@ class NoteListActivity : AppCompatActivity() {
         val noteList = db.getAll()
         noteListAdapter.setNoteList(noteList)
     }
+
+
+    enum class Mode {
+        SELECT,
+        VIEW
+    }
+
 }
 

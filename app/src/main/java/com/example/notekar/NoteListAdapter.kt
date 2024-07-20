@@ -1,12 +1,14 @@
 package com.example.notekar
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notekar.databinding.NoteLayoutBinding
 
 class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteListViewHolder>() {
     private var noteClickListener: NoteClickListener? = null
+    private val mode = NoteListActivity.Mode.VIEW
     private var noteModelList: List<NoteModel> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteListViewHolder {
@@ -51,11 +53,19 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteListViewHolder>
         fun bind(noteModel: NoteModel) {
             binding.tvTitle.text = noteModel.title
             binding.tvContent.text = noteModel.content
+            if (mode === NoteListActivity.Mode.VIEW) {
+                binding.checkbox.visibility = View.GONE
+            } else if (mode === NoteListActivity.Mode.SELECT) {
+                binding.checkbox.visibility = View.VISIBLE
+            }
+            binding.checkbox.isChecked = noteModel.isChecked
         }
     }
 
 
-    interface NoteClickListener {
-        fun onClick(noteModel: NoteModel?)
-    }
+
+interface NoteClickListener {
+    fun onClick(noteModel: NoteModel?)
 }
+}
+
