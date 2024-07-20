@@ -3,6 +3,7 @@ package com.example.notekar
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -54,6 +55,13 @@ class NoteListActivity : AppCompatActivity() {
             }
         })
 
+        noteListAdapter.setOnLongClickListener(object :NoteListAdapter. LongNoteClickListener{
+            override fun onLongClick(noteModel: NoteModel?) {
+                updateMode(Mode.SELECT)
+                Toast.makeText(this@NoteListActivity, "clicked", Toast.LENGTH_SHORT).show()
+            }
+        })
+
 
         binding.fabAddNotes.setOnClickListener {
             val intent = Intent(
@@ -62,6 +70,11 @@ class NoteListActivity : AppCompatActivity() {
             )
            detailActivityResult.launch(intent)
         }
+    }
+    private fun updateMode(mode: Mode) {
+        this.mode = mode
+        noteListAdapter.setMode(mode)
+        invalidateOptionsMenu()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

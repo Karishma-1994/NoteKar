@@ -1,5 +1,6 @@
 package com.example.notekar
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,8 @@ import com.example.notekar.databinding.NoteLayoutBinding
 
 class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteListViewHolder>() {
     private var noteClickListener: NoteClickListener? = null
-    private val mode = NoteListActivity.Mode.VIEW
+    private var longNoteClickListener: LongNoteClickListener? = null
+    private var mode = NoteListActivity.Mode.VIEW
     private var noteModelList: List<NoteModel> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteListViewHolder {
@@ -33,6 +35,16 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteListViewHolder>
     fun setOnClickListener(noteClickListener: NoteClickListener) {
         this.noteClickListener = noteClickListener
     }
+    fun setOnLongClickListener(longNoteClickListener: LongNoteClickListener?) {
+        this.longNoteClickListener = longNoteClickListener
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setMode(mode: NoteListActivity.Mode?) {
+        this.mode = mode!!
+        notifyDataSetChanged()
+    }
+
 
     inner class NoteListViewHolder(
         private val binding: NoteLayoutBinding
@@ -40,6 +52,7 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteListViewHolder>
 
         init {
             setClickListener()
+            setOnLongClickListener()
         }
 
         private fun setClickListener() {
@@ -47,6 +60,14 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteListViewHolder>
                 val position = adapterPosition
                 val clickedNoteModel: NoteModel = noteModelList[position]
                 noteClickListener?.onClick(clickedNoteModel)
+            }
+        }
+
+        fun setOnLongClickListener() {
+            binding.tvLayout.setOnLongClickListener {
+                val position = adapterPosition
+                longNoteClickListener!!.onLongClick(noteModelList[position])
+                true
             }
         }
 
@@ -67,5 +88,10 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteListViewHolder>
 interface NoteClickListener {
     fun onClick(noteModel: NoteModel?)
 }
+
+    interface LongNoteClickListener {
+        fun onLongClick(noteModel: NoteModel?)
+    }
+
 }
 
